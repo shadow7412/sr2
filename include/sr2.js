@@ -117,7 +117,7 @@ function signinCallback(status){
 				data:{"login":r.email},
 				complete:function(){grabFeeds();}
 			});
-			fetchData();
+			grabFeeds();
 		},
 		error:function(a){
 			//loadBox("Error: Could not sign you in. Try refreshing the page.");

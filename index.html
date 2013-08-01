@@ -1,10 +1,77 @@
-<!DOCTYPE html>
-<html>
-<head>
-<title>Shadow Reader</title>
 
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" >
+<head>
+	<title>The Left Menu 2 column Liquid Layout. Em widths. Cross-Browser. Equal Height Columns.</title>
+	<meta http-equiv="Content-Type" content="application/xhtml+xml; charset=utf-8" />
+	<meta name="description" content="The Left Menu 2 column Liquid Layout. Em widths. Cross-Browser. Equal Height Columns." />
+	<meta name="keywords" content="The Left Menu 2 column Liquid Layout. Em widths. Cross-Browser. Equal Height Columns." />
+	<meta name="robots" content="index, follow" />
+	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+	<link rel="stylesheet" type="text/css" href="include/screen.css">
+    <!--[if lt IE 7]>
+    <style media="screen" type="text/css">
+    .col1 {
+	    width:100%;
+	}
+    </style>
+    <![endif]-->
+	<script src="include/jquery-2.0.3.min.js" defer="defer"></script>
+	<script src="include/jquery.timeago.js" defer="defer"></script>
+	<script src="include/knockout-2.3.0.js" defer="defer"></script>
+	<script src="include/sr2.js" defer="defer"></script>
+	<script type="text/javascript" src="//apis.google.com/js/client:plusone.js"></script>
 </head>
 <body>
+
+<div id="header">
+	<span id="signinButton" class="margin-top:5px" style="float:right">
+	  <span
+		class="g-signin"
+		data-callback="signinCallback"
+		data-clientid="154114301111.apps.googleusercontent.com"
+		data-cookiepolicy="single_host_origin"
+		data-requestvisibleactions="http://schemas.google.com/AddActivity"
+		data-scope="https://www.googleapis.com/auth/plus.login https://www.googleapis.com/auth/userinfo.email">
+	  </span>
+	</span>
+    <h1>Shadow Reader</h1>
+    <h2>Exists because Google Reader does not.</h2>
+	<p id="layoutdims" data-bind="text: username">You are logged in as XXXX</p>
+</div>
+<div class="colmask leftmenu">
+    <div class="colright">
+        <div class="col1wrap">
+            <div class="col1" id="thefeedhouse">
+                <!-- Column 2 start -->
+                <div data-bind="template: {foreach: visibleFeeds, afterAdd:slideIn}">
+					<div class="item">
+						<div class="title" data-bind="click: expand, css:{unread: unread}">
+							<time style="float:right" data-bind="text: $.timeago(date), attr: {title: date}"></time>
+							<span style="font-weight:bold" data-bind="text:title"></span> - 
+							<span data-bind="text:feed"></span>
+						</div>
+						<div class="feedcontent" data-bind="visible: open, html:contents"></div>
+					</div>
+				</div>
+				<div class="item onscreen" data-bind="visible:loading">... LOADING ...</div>
+				<div class="item onscreen" data-bind="visible:!loading()"><button onclick="grabFeeds()" style="width:100%">MORE</button></div>
+				<!-- Column 2 end -->
+            </div>
+        </div>
+        <div class="col2">
+            <!-- Column 1 start -->
+			a
+			<!-- Column 1 end -->
+        </div>
+    </div>
+</div>
+<div id="footer">
+    <p>This page uses the <a href="http://matthewjamestaylor.com/blog/ultimate-2-column-left-menu-ems.htm">Ultimate 'Left Menu' 2 column Liquid Layout</a> by <a href="http://matthewjamestaylor.com">Matthew James Taylor</a>. View more <a href="http://matthewjamestaylor.com/blog/-website-layouts">website layouts</a> and <a href="http://matthewjamestaylor.com/blog/-web-design">web design articles</a>.</p>
+</div>
+
+
 
 </body>
 </html>

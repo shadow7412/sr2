@@ -18,5 +18,5 @@ while($row = $q->fetch_assoc()){
 	$json['feeds'][] = $row;
 }
 $json['errors'] = ob_get_clean();
-echo json_encode($json, true);
+echo json_encode($json);
 ?>

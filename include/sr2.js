@@ -46,9 +46,9 @@ function grabFeeds(){
 	$.ajax("api/fetch.php?f="+f,{
 		dataType:"json",
 		success:function(result){
-			for(var i in result){
+			for(var i in result.feeds){
 				view.loading(false);
-				view.feeds.push(new Item(result[i]));
+				view.feeds.push(new Item(result.feeds[i]));
 			}
 		}
 	})
@@ -128,7 +128,7 @@ function signinCallback(status){
 				type:"post",
 				data:{"i":view.user_id,"t":view.access_token},
 				success:function(){
-					$.ajax("https://www.googleapis.com/plus/v1/people/"+view.user_id+"?key="+view.api_key,{
+					$.ajax("https://www.googleapis.com/plus/v1/people/"+view.user_id+"?key="+view.api_key, {
 						dataType:"json",
 						success:function(profile){
 							log("Profile",arguments);
@@ -136,9 +136,17 @@ function signinCallback(status){
 							view.user_image(profile.image.url);
 							console.groupEnd("Login");
 							grabFeeds();
+						},
+						error:function(){
+							console.log("FAILED PROFILE FETCH",arguments)
+							console.groupEnd("Login");
 						}
 					})
-				}
+				},
+				error:function(){
+					console.log("FAILED USER REGISTER",arguments)
+					console.groupEnd("Login");
+				}	
 			});
 		},
 		error:function(a){

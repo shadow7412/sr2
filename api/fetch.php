@@ -1,4 +1,6 @@
 <?php
+ob_start();
+error_reporting(1);
 require "../include/db.php";
 $from = intVal($_GET['f']);
 if($from==0) $from=99999999;
@@ -11,10 +13,10 @@ $q = $db->query("
 	ORDER BY `id`
 	DESC LIMIT 0, $number
 ");
-$feeds = array();
+$json = array("feeds"=>array());
 while($row = $q->fetch_assoc()){
-	$feeds[] = $row;
+	$json['feeds'][] = $row;
 }
-
-echo json_encode($feeds, true);
+$json['errors'] = ob_get_clean();
+echo json_encode($json, true);
 ?>

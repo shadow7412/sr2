@@ -49,8 +49,8 @@
 					<div class="item">
 						<div class="title" data-bind="click: expand, css:{unread: unread}">
 							<time style="float:right" data-bind="text: $.timeago(date), attr: {title: date}"></time>
-							<span style="font-weight:bold" data-bind="text:title"></span> - 
-							<span data-bind="text:feed"></span>
+							<span style="font-weight:bold" data-bind="text:subject_summary"></span> - 
+							<span data-bind="text: title"></span>
 							<!-- Sharing -->
 						</div>
 						<div class="feedcontent" data-bind="visible: open, html:contents"></div>
@@ -63,7 +63,16 @@
         </div>
         <div class="col2">
             <!-- Column 1 start -->
-			Folders here.
+			Things to look forward to:
+			<ul>
+				<li> Folders
+				<li> Adding feeds
+				<li> Read/unread
+				<li> Infinite scroll
+				<li> Shared items
+				<li> Starred items
+				<li> +1s
+			</ul>
 			<!-- Column 1 end -->
         </div>
     </div>

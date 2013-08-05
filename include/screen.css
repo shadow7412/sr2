@@ -28,9 +28,8 @@ html {
 	margin-top:4px;
 	border:1px solid;
 	line-height:2;
-	box-shadow:3px 3px 1px;
+	box-shadow:3px 3px 5px #444;
 	overflow:hidden;
-	transition:height 2s;
 	padding-right: 5px;
 	padding-left: 5px;
 }
@@ -50,7 +49,6 @@ html {
 	border-bottom-right-radius: 15px;
 	padding:10px;
 }
-
 a {
 	color:#369;
 }
@@ -144,14 +142,14 @@ img {
 }
 /* 2 column left menu settings */
 .leftmenu {
-	background:#cfc;
+	background:#ccf;
 }
 .leftmenu .colright {
 	float:left;
 	width:200%;
 	position:relative;
 	left:12em;
-	background:#fff;
+	background:#eef;
 }
 .leftmenu .col1wrap {
 	float:right;

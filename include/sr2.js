@@ -60,13 +60,15 @@ function Item(o){
 	var self = this;
 	self.id = o.id;
 	self.feed = o.feed;
+	self.title = o.title;
 	self.link = o.link;
 	self.subject = o.subject;
 	self.date = o.date;
 	self.content = o.content;
-	self.unread = ko.observable(true);
+	self.link = o.link;
+	self.unread = ko.observable(o.read != 1);
 	
-	self.title = ko.computed(function(){
+	self.subject_summary = ko.computed(function(){
 		return self.subject.length<100?self.subject:self.subject.slice(0,100)+"..."
 	});
 	self.firstload = true;

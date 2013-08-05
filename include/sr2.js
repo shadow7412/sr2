@@ -4,6 +4,19 @@ var view;
 function View(){
 	var self = view = this;
 	
+	//Window
+	ko.computed(function(){
+		document.title = "Shadow Reader"
+	});
+	
+	//User
+	self.api_key = "AIzaSyCIdzX6hDBMqZzabC0EGyEu4dS43FBOAIE";
+	self.user_name = ko.observable("Please log in.");
+	self.user_id = undefined;
+	self.user_image = ko.observable();
+	self.access_token = undefined;
+	
+	//Feeds
 	self.feeds = ko.observableArray();
 	self.activeFeed = ko.observable();
 	self.loading = ko.observable(false);
@@ -17,17 +30,12 @@ function View(){
 			self.shownFeeds(self.shownFeeds()+1);
 		}
 	}
-	
 	self.slideIn = function(e){
 		if(e.nodeType===1){
 			window.getComputedStyle(e).opacity
 			e.classList.add("onscreen");
 		}
 	}
-	
-	//User
-	self.username = ko.observable("XXXX");
-
 }
 
 function grabFeeds(){
@@ -46,7 +54,7 @@ function grabFeeds(){
 	})
 }
 function Feed(){
-	
+	//Should contains each feed? Or at least the filter...
 }
 function Item(o){
 	var self = this;
@@ -101,27 +109,42 @@ function log(){
 
 function nextItem(){
 	//TODO unmessyashell this
-	view.feeds()[view.feeds().indexOf(view.activeFeed())+1]
+	view.feeds()[view.feeds().indexOf(view.activeFeed())+1];
 }
 
 //google login
 function signinCallback(status){
 	//loadBox(l.signing);
+	console.groupCollapsed("Login");
 	$("#signinButton").fadeOut();
-	$.ajax("https://www.googleapis.com/oauth2/v1/tokeninfo?access_token="+status.access_token,{
+	view.access_token = status.access_token;
+	view.user_name("Logging in...")
+	$.ajax("https://www.googleapis.com/oauth2/v1/tokeninfo?access_token="+view.access_token,{
 		dataType:"json",
 		success:function(r){
-			console.log(r);
+			console.log("After Token",r);
+			view.user_id = r.user_id;
 			$.ajax("api/login.php",{
 				type:"post",
-				data:{"login":r.email},
-				complete:function(){grabFeeds();}
+				data:{"i":view.user_id,"t":view.access_token},
+				success:function(){
+					$.ajax("https://www.googleapis.com/plus/v1/people/"+view.user_id+"?key="+view.api_key,{
+						dataType:"json",
+						success:function(profile){
+							log("Profile",arguments);
+							view.user_name(profile.name.givenName + " " + profile.name.familyName);
+							view.user_image(profile.image.url);
+							console.groupEnd("Login");
+							grabFeeds();
+						}
+					})
+				}
 			});
-			grabFeeds();
 		},
 		error:function(a){
 			//loadBox("Error: Could not sign you in. Try refreshing the page.");
 			console.log("FAILED LOGIN",a);
+			console.groupEnd("Login");
 		}
 	});
 }

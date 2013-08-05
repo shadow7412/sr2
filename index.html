@@ -3,7 +3,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" >
 <head>
-	<title>The Left Menu 2 column Liquid Layout. Em widths. Cross-Browser. Equal Height Columns.</title>
+	<title data-bind="text: title">SR2</title>
 	<meta http-equiv="Content-Type" content="application/xhtml+xml; charset=utf-8" />
 	<meta name="description" content="The Left Menu 2 column Liquid Layout. Em widths. Cross-Browser. Equal Height Columns." />
 	<meta name="keywords" content="The Left Menu 2 column Liquid Layout. Em widths. Cross-Browser. Equal Height Columns." />
@@ -33,12 +33,12 @@
 		data-clientid="154114301111.apps.googleusercontent.com"
 		data-cookiepolicy="single_host_origin"
 		data-requestvisibleactions="http://schemas.google.com/AddActivity"
-		data-scope="https://www.googleapis.com/auth/plus.login https://www.googleapis.com/auth/userinfo.email">
+		data-scope="https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/plus.me">
 	  </span>
 	</span>
     <h1>Shadow Reader</h1>
     <h2>Exists because Google Reader does not.</h2>
-	<p id="layoutdims" data-bind="text: username">You are logged in as XXXX</p>
+	<p id="layoutdims" data-bind="text: user_name">Please log in...</p>
 </div>
 <div class="colmask leftmenu">
     <div class="colright">
@@ -51,6 +51,7 @@
 							<time style="float:right" data-bind="text: $.timeago(date), attr: {title: date}"></time>
 							<span style="font-weight:bold" data-bind="text:title"></span> - 
 							<span data-bind="text:feed"></span>
+							<!-- Sharing -->
 						</div>
 						<div class="feedcontent" data-bind="visible: open, html:contents"></div>
 					</div>
@@ -62,7 +63,7 @@
         </div>
         <div class="col2">
             <!-- Column 1 start -->
-			a
+			Folders here.
 			<!-- Column 1 end -->
         </div>
     </div>

@@ -8,6 +8,9 @@ body {
 						/* The min-width property does not work in old versions of Internet Explorer */
 	font-size:90%;
 }
+* {
+	vertical-align:top;
+}
 /* READER ITEMS */
 
 html {
@@ -37,13 +40,13 @@ html {
 	background:lightcyan;
 }
 
-.feedcontent {
+.itemcontent {
 	font-size:12px;
 	background:#fff;
 	border-bottom:solid 1px;
 	border-left:solid 1px;
 	border-right:solid 1px;
-	box-shadow:3px 3px 3px;
+	box-shadow:3px 3px 5px #444;
 	transition: height 1s;
 	border-bottom-left-radius: 15px;
 	border-bottom-right-radius: 15px;

@@ -1,4 +1,3 @@
-
 var view;
 
 function View(){
@@ -18,43 +17,65 @@ function View(){
 	
 	//Feeds
 	self.feeds = ko.observableArray();
-	self.activeFeed = ko.observable();
-	self.loading = ko.observable(false);
-	self.shownFeeds = ko.observable(0);
+	self.addFeed = function(id, title, url){
+		if(!self.feeds.hasOwnProperty(id))
+			self.feeds.push(new Feeds(arguments));
+	}
+	self.activeFeeds = ko.observableArray();
 	
-	self.visibleFeeds = ko.computed(function(){
-		return self.feeds.slice(0,self.shownFeeds());
+	//Items
+	self.items = ko.observableArray(); //all cached items
+	self.shownItems = ko.observable(0);
+	self.activeItem = ko.observable();
+	self.loading = ko.observable(false);
+	
+	self.visibleItems = ko.computed(function(){
+		self.activeFeeds(); //just to make sure the compted function knows about us
+		if(self.activeFeeds().length==0)
+			return self.items.slice(0,self.shownItems());
+		else { //we are limiting the items shown by feed(s)
+			return self.items().filter(function(e){
+				return e.feed in self.activeFeeds();
+			}).slice(0,self.shownItems())
+		}
 	});
 	self.allowItem = function(){
-		if(self.feeds().length>self.shownFeeds()){
-			self.shownFeeds(self.shownFeeds()+1);
+		if(self.visibleItems().length >= self.shownItems()){
+			self.shownItems(self.shownItems()+1);
 		}
 	}
 	self.slideIn = function(e){
 		if(e.nodeType===1){
+			//Refresh the DOM - causing the transition to happen
 			window.getComputedStyle(e).opacity
 			e.classList.add("onscreen");
 		}
 	}
+	self.finished = ko.observable(false)
 }
 
 function grabFeeds(){
 	view.loading(true);
-	var f = view.feeds().length;
-	if(f!=0) f = view.feeds()[f-1].id;
+	view.finished(false);
+	var f = view.items().length;
+	// Grab the id of the most recently fetched feed.
+	// We only want the entries after (or before) it.
+	if(f!=0) f = view.items()[f-1].id;
 
 	$.ajax("api/fetch.php?f="+f,{
 		dataType:"json",
 		success:function(result){
-			for(var i in result.feeds){
-				view.loading(false);
-				view.feeds.push(new Item(result.feeds[i]));
+			view.loading(false);
+			for(var i in result.items){
+				view.items.push(new Item(result.items[i]));
 			}
+			if(!i) view.finished(true);
 		}
 	})
 }
 function Feed(){
 	//Should contains each feed? Or at least the filter...
+	
 }
 function Item(o){
 	var self = this;
@@ -69,28 +90,33 @@ function Item(o){
 	self.unread = ko.observable(o.read != 1);
 	
 	self.subject_summary = ko.computed(function(){
-		return self.subject.length<100?self.subject:self.subject.slice(0,100)+"..."
+		if(self.subject)
+			return self.subject.length<100?self.subject:self.subject.slice(0,100)+"...";
 	});
 	self.firstload = true;
 	
-	self.expand = function(){
-		if(view.activeFeed()==this)
+	self.expand = function(d,e){
+		if(view.activeItem()==this)
 			//if already active, deactivate.
-			view.activeFeed(null)
+			view.activeItem(null)
 		else {
-			view.activeFeed(this);
+			view.activeItem(this);
 			self.unread(false);
+			e.target.scrollIntoView(true);
 		}
 	}
 	self.open = ko.computed(function(){
-		return self == view.activeFeed();
+		return self == view.activeItem();
 	});
 	
+	// Tell server if read status changes
 	ko.computed(function(){
 		self.unread()
 		if(self.firstload) return self.firstload = false;
 		
-		$.post("api/read.php",{i:self.id,r:self.unread()},log);
+		$.post("api/read.php",{
+			i:self.id,r:self.unread()
+		},log);
     });
 	
 	self.contents = ko.computed(function(){
@@ -107,11 +133,6 @@ $(function(){
 // Lazy console.log
 function log(){
 	console.log(arguments);
-}
-
-function nextItem(){
-	//TODO unmessyashell this
-	view.feeds()[view.feeds().indexOf(view.activeFeed())+1];
 }
 
 //google login
@@ -158,12 +179,3 @@ function signinCallback(status){
 		}
 	});
 }
-/*
-{
-  "id_token": the user ID,
-  "access_token": the access token,
-  "expires_in": the validity of the tokens, in seconds,
-  "error": The OAuth2 error type if problems occurred,
-  "error_description": an error message if problems occurred
-}
-*/

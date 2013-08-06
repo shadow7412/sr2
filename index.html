@@ -45,19 +45,26 @@
         <div class="col1wrap">
             <div class="col1" id="thefeedhouse">
                 <!-- Column 2 start -->
-                <div data-bind="template: {foreach: visibleFeeds, afterAdd:slideIn}">
+                <div data-bind="template: {foreach: visibleItems, afterAdd:slideIn}">
 					<div class="item">
 						<div class="title" data-bind="click: expand, css:{unread: unread}">
 							<time style="float:right" data-bind="text: $.timeago(date), attr: {title: date}"></time>
+							<!--<img src="images/star.png"/>-->
 							<span style="font-weight:bold" data-bind="text:subject_summary"></span> - 
 							<span data-bind="text: title"></span>
 							<!-- Sharing -->
 						</div>
-						<div class="feedcontent" data-bind="visible: open, html:contents"></div>
+						<div class="itemcontent" data-bind="visible: open">
+							<h1><a data-bind="href: link, text: subject"></a></h1>
+							<h5><a data-bind="href: link, text: title"></a></h5>
+							<div data-bind="html:contents"></div>
+						</div>
 					</div>
 				</div>
 				<div class="item onscreen" data-bind="visible:loading">... LOADING ...</div>
-				<div class="item onscreen" data-bind="visible:!loading()"><button onclick="grabFeeds()" style="width:100%">MORE</button></div>
+				<div class="item onscreen" data-bind="visible:finished">No More :(</div>
+				<div class="item onscreen" data-bind="visible:!loading()">
+				<button onclick="grabFeeds()" style="width:100%">Aquire more!</button></div>
 				<!-- Column 2 end -->
             </div>
         </div>

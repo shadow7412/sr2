@@ -1,6 +1,5 @@
 <?php
 require "../include/db.php";
-//$.post("api/read.php",{i:self.id,r:self.unread()},log);
 $unread = $_POST['r']=="true"?0:1;
 $item = intVal($_POST['i']);
 
@@ -9,5 +8,8 @@ INSERT INTO `useritems`
 (`iduser`,`iditem`,`read`)
 VALUES
 ('$_user',$item,$unread)
+ON DUPLICATE KEY
+UPDATE `read`=$unread
 ");
+echo "P{$item}R{$unread}";
 ?>

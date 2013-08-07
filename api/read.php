@@ -5,16 +5,6 @@ $item = intVal(@$_POST['i']);
 $all = isset($_POST['all']);
 if($all){
 	$db->query("
-	INSERT INTO `useritems`
-	(`iduser`,`iditem`,`read`)
-	VALUES
-	('$_user',$item,$unread)
-	ON DUPLICATE KEY
-	UPDATE `read`=$unread
-	");
-	echo "P{$item}R{$unread}";
-} else {
-	$db->query("
 		INSERT INTO useritems
 		(iduser, iditem, `read`)
 		SELECT $_user, id, 1
@@ -24,5 +14,16 @@ if($all){
 		UPDATE `read`=`read`
 	");
 	echo "All Read ".$db->error;
+} else {
+	if($item==0) die("P0-NO");
+	$db->query("
+		INSERT INTO `useritems`
+		(`iduser`,`iditem`,`read`)
+		VALUES
+		('$_user',$item,$unread)
+		ON DUPLICATE KEY
+		UPDATE `read`=$unread
+	");
+	echo "P{$item}R{$unread}";
 }
 ?>

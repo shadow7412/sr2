@@ -34,6 +34,7 @@ while($row = $feeds->fetch_assoc()){
 	$errors++;
 	output("Failed to scrape :(\n");
   }
+  
   //for each rss:
   foreach($rss->item as $item){
   //if the current one exists, break here (move to next feed).
@@ -47,7 +48,7 @@ while($row = $feeds->fetch_assoc()){
 	$checkitem->store_result();
 
 	if($checkitem->num_rows==0){
-	      output("\tAdding item",++$newitems,": ",$row['title']," - ",$subject,"... ",$additem->execute()?"Success":"Failed",$db->error,"\n");
+	      output("\tAdding item ",++$newitems,": ",$row['title']," - ",$subject,"... ",$additem->execute()?"Success":"Failed",$db->error,"\n");
 	} else {
 	      output("\tFound entry we already have - skipping rest of thread.\n");
 	      break;

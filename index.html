@@ -85,6 +85,9 @@
 				<li> Starred items
 				<li> +1s
 			</ul>
+			<ul data-bind="foreach:feeds">
+				<li data-bind="text: title, click:$root.activateFeed, css:{active: $root.activeFolder() == $data}"></li>
+			</ul>
 			<!-- Column 1 end -->
         </div>
     </div>

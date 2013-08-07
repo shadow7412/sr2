@@ -18,11 +18,16 @@ function View(){
 	//Feeds
 	self.feeds = ko.observableArray();
 	self.addFeed = function(id, title, url){
-		if(!self.feeds.hasOwnProperty(id))
-			self.feeds.push(new Feeds(arguments));
+		if(self.feeds().filter(function(a){return id==a.id}).length==0)
+			self.feeds.push(new Feed(arguments));
 	}
 	self.activeFeeds = ko.observableArray();
-	
+	self.activeFolder = ko.observable();
+	self.activateFeed = function(feed){
+		self.activeFeeds([feed.id])
+		self.activeFolder(feed);
+		forceRefresh();
+	}
 	//Items
 	self.items = ko.observableArray(); //all cached items
 	self.shownItems = ko.observable(0);
@@ -30,13 +35,12 @@ function View(){
 	self.loading = ko.observable(false);
 	
 	self.visibleItems = ko.computed(function(){
-		self.activeFeeds(); //just to make sure the compted function knows about us
 		if(self.activeFeeds().length==0)
 			return self.items.slice(0,self.shownItems());
 		else { //we are limiting the items shown by feed(s)
 			return self.items().filter(function(e){
-				return e.feed in self.activeFeeds();
-			}).slice(0,self.shownItems())
+				return self.activeFeeds().indexOf(e.feed) != -1;
+			})
 		}
 	});
 	self.allowItem = function(){
@@ -57,15 +61,21 @@ function View(){
 function grabFeeds(){
 	view.loading(true);
 	view.finished(false);
-	var f = view.items().length;
+	var i = view.items().length;
+	var f = "";
 	// Grab the id of the most recently fetched feed.
 	// We only want the entries after (or before) it.
-	if(f!=0) f = view.items()[f-1].id;
-
-	$.ajax("api/fetch.php?f="+f,{
+	if(i!=0) i = view.items()[i-1].id;
+	if(view.activeFeeds().length!=0)
+		f = "&f[]=" + view.activeFeeds().join("&f[]=");
+		
+	$.ajax("api/fetch.php?i="+i+f,{
 		dataType:"json",
 		success:function(result){
 			view.loading(false);
+			for(var i in result.feeds){
+				view.addFeed(i,result.feeds[i].title, "");
+			}
 			for(var i in result.items){
 				view.items.push(new Item(result.items[i]));
 			}
@@ -83,14 +93,15 @@ function allRead(){
 	//work out what we're limited to.
 	view.loading(true);
 	view.list=([]);
-	$.post("api/read.php?all=please",forceRefresh)
+	$.post("api/read.php",{all:true},forceRefresh);
 }
 function Feed(o){
 	//Should contains each feed? Or at least the filter...
 	var self = this;
 	
-	self.id = o.id
-	self.subject = o.subject
+	self.id = o[0];
+	self.title = o[1];
+	self.url = o[2];
 }
 function Item(o){
 	var self = this;

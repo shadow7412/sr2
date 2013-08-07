@@ -2,10 +2,12 @@
 ob_start();
 error_reporting(1);
 require "../include/db.php";
-$from = intVal($_GET['f']);
+$from = intVal($_GET['i']);
 //o=oldfirst
 //h=hideread
-//f=from (id)
+//i=from (id)
+//f[] = feeds to INCLUDE (all if not specified)
+
 $oldfirst = false;
 $hideread = true;
 
@@ -19,6 +21,10 @@ if($oldfirst){
 }
 
 $read = $hideread?"`read`=0 OR isnull(`read`)":"1";
+if(isset($_GET['f'])){
+	$feeds = "AND `feed` IN (".implode(", ",$_GET['f']).")";
+} else 
+	$feeds = "";
 
 $number = isset($_GET['n'])?$_GET['n']:50;
 
@@ -27,7 +33,7 @@ $q = $db->query("
 		SELECT rssitems.id, feed, link, subject, date, content, title, url
 		FROM rssitems
 		LEFT JOIN rssfeeds ON rssfeeds.id = rssitems.feed
-		WHERE rssitems.id $arrow $from 
+		WHERE rssitems.id $arrow $from $feeds
 		ORDER BY rssitems.id $direction
 	) AS items
 	LEFT JOIN 
@@ -42,10 +48,10 @@ $q = $db->query("
 ");
 $json['errors'] = $db->error;
 $json = array("feeds"=>array());
+$unneededforitems = array("title"=>true);
 if($q) while($row = $q->fetch_assoc()){
-	//$json['feeds'][] = array();
-	$json['items'][] = $row;
-	$json['ids'][] = $row['id'];
+	$json['items'][] = array_diff_key($row,$unneededforitems);
+	$json['feeds'][$row['feed']] = array("title"=>$row['title']);
 }
 $json['errors'] .= ob_get_clean();
 echo json_encode($json);

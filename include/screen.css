@@ -138,6 +138,9 @@ img {
 #header .toolbar {
 	float:left;
 }
+.active {
+	font-weight:bold;
+}
 /* column container */
 .colmask {
 	position:relative;		/* This fixes the IE7 overflow hidden bug and stops the layout jumping out of place */

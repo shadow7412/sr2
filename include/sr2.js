@@ -205,3 +205,23 @@ function signinCallback(status){
 		}
 	});
 }
+
+function next(){
+	$('.item.onscreen [data-bind="html:contents"]:visible').parents(".item.onscreen").next().children(".title").click()
+}
+function previous(){
+	$('.item.onscreen [data-bind="html:contents"]:visible').parents(".item.onscreen").prev().children(".title").click()
+}
+
+$(document).on("keydown",function(e){
+	switch(e.keyCode){
+		case 74: //j
+			next();
+			break;
+		case 75: //k
+			previous();
+			break;
+		default:
+			console.log("You pressed: ",e.keyCode);
+	}
+})

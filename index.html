@@ -38,7 +38,12 @@
 	</span>
     <h1>Shadow Reader</h1>
     <h2>Exists because Google Reader does not.</h2>
-	<p id="layoutdims" data-bind="text: user_name">Please log in...</p>
+	<p id="layoutdims">
+		<span class="toolbar">
+			<button onclick="forceRefresh()">Force Refresh</button>
+			<button onclick="allRead()">All Read</button>
+		</span>
+	<span data-bind="text: user_name">Please log in...</span></p>
 </div>
 <div class="colmask leftmenu">
     <div class="colright">

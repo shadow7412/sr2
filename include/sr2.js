@@ -73,9 +73,24 @@ function grabFeeds(){
 		}
 	})
 }
-function Feed(){
+function forceRefresh(){
+	view.items([]);
+	view.shownItems(0);
+	view.activeItem(null);
+	grabFeeds();
+}
+function allRead(){
+	//work out what we're limited to.
+	view.loading(true);
+	view.list=([]);
+	$.post("api/read.php?all=please",forceRefresh)
+}
+function Feed(o){
 	//Should contains each feed? Or at least the filter...
+	var self = this;
 	
+	self.id = o.id
+	self.subject = o.subject
 }
 function Item(o){
 	var self = this;

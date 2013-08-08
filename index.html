@@ -60,9 +60,10 @@
 							<!-- Sharing -->
 						</div>
 						<div class="itemcontent" data-bind="visible: open">
-							<h1><a data-bind="href: link, text: subject"></a></h1>
-							<h5><a data-bind="href: link, text: title"></a></h5>
+							<h1><a data-bind="attr: {href:link}, text: subject"></a></h1>
+							<h3><a data-bind="attr: {href: link}, text: title"></a></h3>
 							<div data-bind="html:contents"></div>
+							<div class="g-plusone" data-bind="attr:{href:link}"></div>
 						</div>
 					</div>
 				</div>

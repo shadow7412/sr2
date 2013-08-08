@@ -107,7 +107,11 @@ function Item(o){
 	var self = this;
 	self.id = o.id;
 	self.feed = o.feed;
-	self.title = o.title;
+	self.title = ko.computed(function(){
+		return view.feeds().filter(function(a){
+			return a.id==self.feed;
+		})[0].title;
+	});
 	self.link = o.link;
 	self.subject = o.subject;
 	self.date = o.date;
@@ -132,7 +136,9 @@ function Item(o){
 		}
 	}
 	self.open = ko.computed(function(){
-		return self == view.activeItem();
+		var show = self == view.activeItem();
+		if(show) gapi.plusone.go();
+		return show;
 	});
 	
 	// Tell server if read status changes
